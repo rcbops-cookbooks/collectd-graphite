@@ -35,6 +35,7 @@ collectd_plugin "load"
 # apache module requires libcurl
 package "libcurl3-gnutls" do
   action :upgrade
+  only_if { platform?(%w{ubuntu}) }
 end
 
 collectd_plugin "network" do
