@@ -36,6 +36,10 @@ collectd_plugin "load"
 # FIXME: get heirarchical topologies working.
 servers = [ get_access_endpoint("graphite","collectd","network-listener")["host"] ]
 
-collectd_plugin "network" do
-  options :server => servers
+# ignore foodcritic FC023
+# see http://tickets.opscode.com/browse/CHEF-1065
+unless node["roles"].include?("collectd-server")
+  collectd_plugin "network" do
+    options :server => servers
+  end
 end
