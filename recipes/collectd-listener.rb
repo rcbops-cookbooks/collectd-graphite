@@ -48,7 +48,7 @@ collectd_listener_endpoint = get_bind_endpoint("collectd","network-listener")
 line_receiver_endpoint = get_access_endpoint("graphite", "carbon", "line-receiver")
 
 collectd_plugin "network" do
-  options "listen" => collectd_listener_endpoint["host"]
+  options :listen => collectd_listener_endpoint["host"]
 end
 
 collectd_plugin "syslog" do
