@@ -33,7 +33,7 @@ include_recipe "collectd-plugins::swap"
 collectd_plugin "load"
 
 
-case node[:platform]
+case node["platform"]
 when "fedora"
   pkg_name = "libcurl-devel"
 when "ubuntu", "debian"
