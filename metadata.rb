@@ -6,7 +6,7 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "0.0.1"
 
 %W{apt apache2 collectd collectd-plugins graphite osops-utils}.each do |dep|
-  depends |dep|
+  depends dep
 end
 
 %W{ubuntu}.each do |distro|
