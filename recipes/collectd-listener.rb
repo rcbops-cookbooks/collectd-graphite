@@ -32,8 +32,15 @@ include_recipe "collectd-plugins::memory"
 include_recipe "collectd-plugins::swap"
 collectd_plugin "load"
 
-# apache module requires libcurl
-package "libcurl3-gnutls" do
+
+case node[:platform]
+when "fedora"
+  pkg_name = "libcurl-devel"
+when "ubuntu", "debian"
+  pkg_name = "libcurl3-gnutls"
+end
+
+package pkg_name do
   action :upgrade
 end
 
