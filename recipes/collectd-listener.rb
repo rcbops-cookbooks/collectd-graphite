@@ -37,12 +37,11 @@ package "libcurl3-gnutls" do
   action :upgrade
 end
 
+collectd_listener_endpoint = get_bind_endpoint("collectd","network-listener")
+line_receiver_endpoint = get_access_endpoint("graphite", "carbon", "line-receiver")
+
 collectd_plugin "network" do
-  if node['collectd']['is_proxy']
-    options :listen=>'0.0.0.0', :server=>node['collectd']['remote']['ip'], :Forward=>'True'
-  else
-    options :listen=>'0.0.0.0'
-  end
+  options "listen" => collectd_listener_endpoint["host"]
 end
 
 collectd_plugin "syslog" do
@@ -63,8 +62,8 @@ cookbook_file "/usr/lib/collectd/carbon_writer.py" do
 end
 
 collectd_python_plugin "carbon_writer" do
-  options :line_receiver_host => "0.0.0.0",
-          :line_receiver_port => 2003,
+  options :line_receiver_host => line_receiver_endpoint["host"],
+          :line_receiver_port => line_receiver_endpoint["port"],
           :types_d_b => "/usr/share/collectd/types.db",
           :differentiate_counters_over_time => true,
           :lowercase_metric_names => true,

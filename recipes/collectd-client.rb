@@ -30,8 +30,11 @@ include_recipe "collectd-plugins::memory"
 include_recipe "collectd-plugins::swap"
 collectd_plugin "load"
 
-# this should be indirected to management-network
-servers = get_realserver_endpoints("graphite", "management", node)
+# We don't have great ability right now to do hierarchical topology,
+# so we'll just assume we're reporting to the graphite server.
+#
+# FIXME: get heirarchical topologies working.
+servers = [ get_access_endpoint("graphite","collectd","network-listener")["host"] ]
 
 collectd_plugin "network" do
   options :server => servers
