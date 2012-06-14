@@ -31,7 +31,7 @@ include_recipe "collectd-plugins::swap"
 collectd_plugin "load"
 
 # this should be indirected to management-network
-servers = IPManagement.get_ips_for_role("graphite", "management", node)
+servers = get_realserver_endpoints("graphite", "management", node)
 
 collectd_plugin "network" do
   options :server => servers
