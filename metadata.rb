@@ -9,6 +9,6 @@ version          "0.0.1"
   depends dep
 end
 
-%W{ubuntu}.each do |distro|
+%W{ubuntu fedora}.each do |distro|
   supports distro
 end
