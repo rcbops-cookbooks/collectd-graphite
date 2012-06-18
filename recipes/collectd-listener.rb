@@ -52,7 +52,7 @@ collectd_plugin "network" do
 end
 
 collectd_plugin "syslog" do
-  options :log_level => "info"
+  options :log_level => "Info"
 end
 
 collectd_plugin "apache" do
