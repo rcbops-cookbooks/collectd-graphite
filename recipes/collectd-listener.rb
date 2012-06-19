@@ -23,15 +23,6 @@
 
 include_recipe "osops-utils"
 include_recipe "collectd"
-include_recipe "collectd-plugins::syslog"
-include_recipe "collectd-plugins::cpu"
-include_recipe "collectd-plugins::df"
-include_recipe "collectd-plugins::disk"
-include_recipe "collectd-plugins::interface"
-include_recipe "collectd-plugins::memory"
-include_recipe "collectd-plugins::swap"
-collectd_plugin "load"
-
 
 case node["platform"]
 when "fedora"
@@ -47,20 +38,6 @@ end
 collectd_listener_endpoint = get_bind_endpoint("collectd","network-listener")
 line_receiver_endpoint = get_access_endpoint("graphite", "carbon", "line-receiver")
 
-collectd_plugin "network" do
-  options :listen => collectd_listener_endpoint["host"]
-end
-
-collectd_plugin "syslog" do
-  options :log_level => "Info"
-end
-
-collectd_plugin "apache" do
-  template "apache_plugin.conf.erb"
-  cookbook "graphite"
-  options :instances => { "graphite" => { :url => "http://localhost/server-status?auto" }}
-end
-
 cookbook_file "/usr/lib/collectd/carbon_writer.py" do
   source "carbon_writer.py"
   mode "0755"
@@ -75,4 +52,27 @@ collectd_python_plugin "carbon_writer" do
           :differentiate_counters_over_time => true,
           :lowercase_metric_names => true,
           :metric_prefix => "collectd"
+end
+
+include_recipe "collectd-plugins::syslog"
+include_recipe "collectd-plugins::cpu"
+include_recipe "collectd-plugins::df"
+include_recipe "collectd-plugins::disk"
+include_recipe "collectd-plugins::interface"
+include_recipe "collectd-plugins::memory"
+include_recipe "collectd-plugins::swap"
+collectd_plugin "load"
+
+collectd_plugin "network" do
+  options :listen => collectd_listener_endpoint["host"]
+end
+
+collectd_plugin "syslog" do
+  options :log_level => "Info"
+end
+
+collectd_plugin "apache" do
+  template "apache_plugin.conf.erb"
+  cookbook "graphite"
+  options :instances => { "graphite" => { :url => "http://localhost/server-status?auto" }}
 end
