@@ -67,10 +67,6 @@ collectd_plugin "network" do
   options :listen => collectd_listener_endpoint["host"]
 end
 
-collectd_plugin "syslog" do
-  options :log_level => "Info"
-end
-
 collectd_plugin "apache" do
   template "apache_plugin.conf.erb"
   cookbook "graphite"
