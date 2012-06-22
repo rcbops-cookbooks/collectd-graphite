@@ -38,13 +38,6 @@ end
 collectd_listener_endpoint = get_bind_endpoint("collectd","network-listener")
 line_receiver_endpoint = get_access_endpoint("graphite", "carbon", "line-receiver")
 
-cookbook_file "/usr/lib/collectd/carbon_writer.py" do
-  source "carbon_writer.py"
-  mode "0755"
-  owner "root"
-  group "root"
-end
-
 collectd_python_plugin "carbon_writer" do
   options :line_receiver_host => line_receiver_endpoint["host"],
           :line_receiver_port => line_receiver_endpoint["port"],
@@ -52,6 +45,14 @@ collectd_python_plugin "carbon_writer" do
           :differentiate_counters_over_time => true,
           :lowercase_metric_names => true,
           :metric_prefix => "collectd"
+end
+
+cookbook_file "/usr/lib/collectd/carbon_writer.py" do
+  source "carbon_writer.py"
+  mode "0755"
+  owner "root"
+  group "root"
+  notifies :restart, resources(:service => "collectd"), :immediately
 end
 
 include_recipe "collectd-plugins::syslog"
@@ -67,12 +68,10 @@ collectd_plugin "network" do
   options :listen => collectd_listener_endpoint["host"]
 end
 
-collectd_plugin "syslog" do
-  options :log_level => "Info"
-end
+graphite_endpoint = get_bind_endpoint("graphite", "api")
 
 collectd_plugin "apache" do
   template "apache_plugin.conf.erb"
   cookbook "graphite"
-  options :instances => { "graphite" => { :url => "http://localhost/server-status?auto" }}
+  options :instances => { "graphite" => { :url => "http://#{graphite_endpoint['host']}:#{graphite_endpoint['port']}/server-status?auto" }}
 end
