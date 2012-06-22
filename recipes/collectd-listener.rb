@@ -47,8 +47,6 @@ collectd_python_plugin "carbon_writer" do
           :metric_prefix => "collectd"
 end
 
-# NOTE(shep): Need to restart collectd here, otherwise we end up
-# adding a bunch of plugins without a writer, causing an error.
 cookbook_file "/usr/lib/collectd/carbon_writer.py" do
   source "carbon_writer.py"
   mode "0755"
