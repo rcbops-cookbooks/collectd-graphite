@@ -47,12 +47,6 @@ collectd_python_plugin "carbon_writer" do
           :metric_prefix => "collectd"
 end
 
-execute "hack /etc/default/collectd" do
-  command "sed -i 's/MAXWAIT=30/MAXWAIT=120/' /etc/default/collectd"
-  only_if { platform?("ubuntu") }
-  action :run
-end
-
 # NOTE(shep): Need to restart collectd here, otherwise we end up
 # adding a bunch of plugins without a writer, causing an error.
 cookbook_file "/usr/lib/collectd/carbon_writer.py" do
