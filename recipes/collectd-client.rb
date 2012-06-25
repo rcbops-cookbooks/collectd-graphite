@@ -21,14 +21,6 @@
 
 include_recipe "osops-utils"
 include_recipe "collectd"
-include_recipe "collectd-plugins::syslog"
-include_recipe "collectd-plugins::cpu"
-include_recipe "collectd-plugins::df"
-include_recipe "collectd-plugins::disk"
-include_recipe "collectd-plugins::interface"
-include_recipe "collectd-plugins::memory"
-include_recipe "collectd-plugins::swap"
-collectd_plugin "load"
 
 # We don't have great ability right now to do hierarchical topology,
 # so we'll just assume we're reporting to the graphite server.
