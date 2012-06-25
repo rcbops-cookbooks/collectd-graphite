@@ -70,8 +70,9 @@ end
 
 graphite_endpoint = get_bind_endpoint("graphite", "api")
 
-collectd_plugin "apache" do
-  template "apache_plugin.conf.erb"
-  cookbook "graphite"
-  options :instances => { "graphite" => { :url => "http://#{graphite_endpoint['host']}:#{graphite_endpoint['port']}/server-status?auto" }}
-end
+# this creates an ordering problem
+#collectd_plugin "apache" do
+#  template "apache_plugin.conf.erb"
+#  cookbook "graphite"
+#  options :instances => { "graphite" => { :url => "http://#{graphite_endpoint['host']}:#{graphite_endpoint['port']}/server-status?auto" }}
+#end
