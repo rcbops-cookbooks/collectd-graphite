@@ -1,4 +1,4 @@
-maintainer       "Rackspace Hosting"
+maintainer       "Rackspace US, Inc."
 maintainer_email "osops@lists.launchpad.net"
 license          "Apache 2.0"
 description      "glues collectd and graphite cookbooks together"
