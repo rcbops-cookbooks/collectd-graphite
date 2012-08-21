@@ -23,6 +23,7 @@
 
 include_recipe "osops-utils"
 include_recipe "collectd"
+include_recipe "monitoring"
 
 case node["platform"]
 when "fedora"
@@ -38,13 +39,15 @@ end
 collectd_listener_endpoint = get_bind_endpoint("collectd","network-listener")
 line_receiver_endpoint = get_access_endpoint("graphite", "carbon", "line-receiver")
 
-collectd_python_plugin "carbon_writer" do
-  options :line_receiver_host => line_receiver_endpoint["host"],
-          :line_receiver_port => line_receiver_endpoint["port"],
-          :types_d_b => "/usr/share/collectd/types.db",
-          :differentiate_counters_over_time => true,
-          :lowercase_metric_names => true,
-          :metric_prefix => "collectd"
+monitoring_metric "carbon_writer" do
+  type "pyscript"
+  script "carbon_writer.py"
+  options "LineReceiverHost" => line_receiver_endpoint["host"],
+          "LineReceiverPort" => line_receiver_endpoint["port"],
+          "TypesDB" => "/usr/share/collectd/types.db",
+          "DifferentiateCountersOverTime" => true,
+          "LowercaseMetricNames" => true,
+          "MetricPrefix" => "collectd"
 end
 
 cookbook_file "/usr/lib/collectd/carbon_writer.py" do
