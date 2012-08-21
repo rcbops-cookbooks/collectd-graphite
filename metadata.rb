@@ -5,7 +5,7 @@ description      "glues collectd and graphite cookbooks together"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "0.0.4"
 
-%W{apt apache2 collectd collectd-plugins graphite osops-utils}.each do |dep|
+%W{apt apache2 collectd collectd-plugins graphite osops-utils monitoring}.each do |dep|
   depends dep
 end
 
