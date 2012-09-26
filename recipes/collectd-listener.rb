@@ -26,7 +26,7 @@ include_recipe "collectd"
 include_recipe "monitoring"
 
 case node["platform"]
-when "fedora"
+when "fedora", "redhat", "centos"
   pkg_name = "libcurl-devel"
 when "ubuntu", "debian"
   pkg_name = "libcurl3-gnutls"
