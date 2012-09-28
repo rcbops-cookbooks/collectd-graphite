@@ -28,8 +28,10 @@ include_recipe "monitoring"
 case node["platform"]
 when "fedora", "redhat", "centos"
   pkg_name = "libcurl-devel"
+  plugin_dir = "/usr/lib64/collectd"
 when "ubuntu", "debian"
   pkg_name = "libcurl3-gnutls"
+  plugin_dir = "/usr/lib/collectd"
 end
 
 package pkg_name do
@@ -50,7 +52,7 @@ monitoring_metric "carbon_writer" do
           "MetricPrefix" => "collectd"
 end
 
-cookbook_file "/usr/lib/collectd/carbon_writer.py" do
+cookbook_file "#{plugin_dir}/carbon_writer.py" do
   source "carbon_writer.py"
   mode "0755"
   owner "root"
