@@ -57,7 +57,7 @@ cookbook_file "#{plugin_dir}/carbon_writer.py" do
   mode "0755"
   owner "root"
   group "root"
-  notifies :restart, resources(:service => "collectd"), :immediately
+  notifies :restart, resources(:service => "collectd"), :delayed
 end
 
 include_recipe "collectd-plugins::syslog"
