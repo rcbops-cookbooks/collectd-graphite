@@ -35,7 +35,7 @@ when "ubuntu", "debian"
 end
 
 package pkg_name do
-  action :upgrade
+  action :install
 end
 
 collectd_listener_endpoint = get_bind_endpoint("collectd","network-listener")
