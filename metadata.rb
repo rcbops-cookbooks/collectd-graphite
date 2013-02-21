@@ -5,10 +5,10 @@ description      "glues collectd and graphite cookbooks together"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "0.0.14"
 
-%W{apt apache2 collectd collectd-plugins graphite osops-utils monitoring}.each do |dep|
-  depends dep
+%W{ centos ubuntu }.each do |distro|
+  supports distro
 end
 
-%W{ubuntu fedora}.each do |distro|
-  supports distro
+%W{ collectd collectd-plugins monitoring osops-utils }.each do |dep|
+  depends dep
 end
