@@ -25,11 +25,10 @@ include_recipe "osops-utils"
 include_recipe "collectd"
 include_recipe "monitoring"
 
-case node["platform"]
-when "fedora", "redhat", "centos"
+if platform_family?('rhel')
   pkg_name = "libcurl-devel"
   plugin_dir = "/usr/lib64/collectd"
-when "ubuntu", "debian"
+elsif platform_family?('debian')
   pkg_name = "libcurl3-gnutls"
   plugin_dir = "/usr/lib/collectd"
 end
@@ -38,18 +37,23 @@ package pkg_name do
   action :install
 end
 
-collectd_listener_endpoint = get_bind_endpoint("collectd","network-listener")
-line_receiver_endpoint = get_access_endpoint("graphite", "carbon", "line-receiver")
+collectd_listener_endpoint = get_bind_endpoint("collectd", "network-listener")
+if not Chef::Config[:solo]
+  line_receiver_endpoint = get_access_endpoint(
+    "graphite", "carbon", "line-receiver")
+else
+  line_receiver_endpoint = node['solo']['graphite']['carbon']['line-receiver']
+end
 
 monitoring_metric "carbon_writer" do
   type "pyscript"
   script "carbon_writer.py"
   options "LineReceiverHost" => line_receiver_endpoint["host"],
-          "LineReceiverPort" => line_receiver_endpoint["port"],
-          "TypesDB" => "/usr/share/collectd/types.db",
-          "DifferentiateCountersOverTime" => true,
-          "LowercaseMetricNames" => true,
-          "MetricPrefix" => "collectd"
+    "LineReceiverPort" => line_receiver_endpoint["port"],
+    "TypesDB" => "/usr/share/collectd/types.db",
+    "DifferentiateCountersOverTime" => true,
+    "LowercaseMetricNames" => true,
+    "MetricPrefix" => "collectd"
 end
 
 cookbook_file "#{plugin_dir}/carbon_writer.py" do
@@ -57,7 +61,7 @@ cookbook_file "#{plugin_dir}/carbon_writer.py" do
   mode "0755"
   owner "root"
   group "root"
-  notifies :restart, resources(:service => "collectd"), :delayed
+  notifies :restart, 'service[collectd]', :delayed
 end
 
 include_recipe "collectd-plugins::syslog"
