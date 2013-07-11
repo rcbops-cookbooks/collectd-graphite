@@ -26,7 +26,13 @@ include_recipe "collectd"
 # so we'll just assume we're reporting to the graphite server.
 #
 # FIXME: get heirarchical topologies working.
-servers = [ get_access_endpoint("graphite","collectd","network-listener")["host"] ]
+if not Chef::Config[:solo]
+  servers = [
+    get_access_endpoint("graphite", "collectd", "network-listener")["host"]
+  ]
+else
+  servers = [node['solo']['graphite']['collectd']['network-listener']['host']]
+end
 
 # ignore foodcritic FC023
 # see http://tickets.opscode.com/browse/CHEF-1065
